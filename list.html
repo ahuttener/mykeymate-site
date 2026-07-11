@@ -116,6 +116,8 @@
   .prefix .inp{padding-left:30px}
 
   .step{display:none}
+  .inp.err,textarea.err,.sel.err{border-color:#e5484d !important;background:rgba(229,72,77,.06)}
+  #vmsg{display:none;color:#e5484d;font-size:12.5px;font-weight:600;text-align:center;padding:2px 20px 8px}
   .step.on{display:block}
 
   .footer{position:sticky;bottom:0;background:color-mix(in srgb,var(--card) 94%,transparent);backdrop-filter:blur(10px);border-top:1px solid var(--line)}
@@ -191,8 +193,8 @@
       <div class="field"><label>Rental type <span class="req">Required</span></label>
         <div class="seg"><div class="segbtn on" data-single="rtype" onclick="pickSeg(this)"><span class="ck">&#10003;</span><b>Monthly rolling</b><span>Flexible month-to-month</span></div><div class="segbtn" data-single="rtype" onclick="pickSeg(this)"><span class="ck">&#10003;</span><b>Fixed term</b><span>Lease for a set period</span></div><div class="segbtn" data-single="rtype" onclick="pickSeg(this)"><span class="ck">&#10003;</span><b>Short term</b><span>Under 6 months</span></div></div>
       </div>
-      <div class="field"><label>Listing title <span class="req">Required</span></label><input class="inp" placeholder="e.g. Bright double room in Drumcondra near the LUAS"></div>
-      <div class="field"><label>Description <span class="req">Required</span></label><textarea placeholder="Describe the place — the vibe, the current flatmates, what's nearby..."></textarea></div>
+      <div class="field"><label>Listing title <span class="req">Required</span></label><input class="inp" required placeholder="e.g. Bright double room in Drumcondra near the LUAS"></div>
+      <div class="field"><label>Description <span class="req">Required</span></label><textarea required placeholder="Describe the place — the vibe, the current flatmates, what's nearby..."></textarea></div>
     </div>
 
     <!-- 2 Property -->
@@ -239,7 +241,7 @@
     <div class="step" data-step="5">
       <div class="lead"><h2>The money</h2><p>Be upfront — transparent listings get better matches.</p></div>
       <div class="two">
-        <div class="field"><label>Monthly rent <span class="req">Required</span></label><div class="prefix"><span>&#8364;</span><input class="inp" type="number" value="680" min="0"></div></div>
+        <div class="field"><label>Monthly rent <span class="req">Required</span></label><div class="prefix"><span>&#8364;</span><input class="inp" required type="number" value="680" min="0"></div></div>
         <div class="field"><label>Deposit</label><div class="prefix"><span>&#8364;</span><input class="inp" type="number" value="680" min="0"></div></div>
       </div>
       <div class="field"><label>Bills included</label>
@@ -284,7 +286,7 @@
     <div class="step" data-step="8">
       <div class="lead"><h2>Availability</h2><p>Last step — when can someone move in?</p></div>
       <div class="two">
-        <div class="field"><label>Available from <span class="req">Required</span></label><input class="inp" type="date" style="color-scheme:light dark"></div>
+        <div class="field"><label>Available from <span class="req">Required</span></label><input class="inp" required type="date" style="color-scheme:light dark"></div>
         <div class="field"><label>Minimum stay</label><select class="sel"><option>No minimum</option><option selected>6 months</option><option>12 months</option></select></div>
       </div>
       <div class="field"><label>Viewings</label>
@@ -295,6 +297,7 @@
   </div>
 
   <div class="footer">
+    <div id="vmsg">Please fill in the required fields to continue.</div>
     <div class="footer-in">
       <button class="btn btn-ghost hide" id="backBtn" onclick="step(-1)">&#8249; Back</button>
       <div class="dots" id="dots"></div>
@@ -323,13 +326,28 @@
     var el=document.querySelectorAll('#stepper .stp')[cur-1];
     if(el&&el.scrollIntoView) el.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
   }
+  function validateStep(){
+    var s=document.querySelector('.step[data-step="'+cur+'"]'); if(!s) return true;
+    var bad=[];
+    s.querySelectorAll('[required]').forEach(function(el){
+      if(!(el.value||'').trim()){ bad.push(el); el.classList.add('err'); } else { el.classList.remove('err'); }
+    });
+    var msg=document.getElementById('vmsg');
+    if(bad.length){ if(msg) msg.style.display='block'; bad[0].focus(); return false; }
+    if(msg) msg.style.display='none'; return true;
+  }
   function step(dir){
+    if(dir>0 && !validateStep()) return;
     if(dir>0 && cur===total){ location.href='feed.html'; return; }
     cur=Math.min(total,Math.max(1,cur+dir)); render();
   }
   function pickSeg(el){var g=el.getAttribute('data-single');document.querySelectorAll('[data-single="'+g+'"]').forEach(function(x){x.classList.remove('on');});el.classList.add('on');}
   function togChip(el){el.classList.toggle('on');}
   function tg(el){el.classList.toggle('on');}
+  document.querySelectorAll('[required]').forEach(function(el){
+    var ev=(el.tagName==='SELECT'||el.type==='date')?'change':'input';
+    el.addEventListener(ev,function(){ el.classList.remove('err'); if(!document.querySelector('.step[data-step="'+cur+'"] [required].err')){ var m=document.getElementById('vmsg'); if(m) m.style.display='none'; } });
+  });
   render();
 </script>
 
