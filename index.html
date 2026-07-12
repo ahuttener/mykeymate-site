@@ -220,14 +220,12 @@
   try{
     var el=document.getElementById('km-intro');
     if(!el) return;
-    var seen=sessionStorage.getItem('km_intro_seen')==='1';
     var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if(seen||reduce){ if(el.parentNode) el.parentNode.removeChild(el); return; }
+    if(reduce){ if(el.parentNode) el.parentNode.removeChild(el); return; }
     document.documentElement.style.overflow='hidden';
     var vid=document.getElementById('km-intro-video'), done=false;
     window.kmIntroDismiss=function(){
       if(done) return; done=true;
-      try{sessionStorage.setItem('km_intro_seen','1');}catch(x){}
       el.classList.add('km-hide');
       document.documentElement.style.overflow='';
       setTimeout(function(){ if(el.parentNode) el.parentNode.removeChild(el); },650);
