@@ -46,6 +46,24 @@
   .cta{margin-top:34px;display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
   .hero-note{margin-top:18px;font-size:15px;color:var(--muted)}
 
+  /* waitlist form */
+  .wl-card{margin:34px auto 0;max-width:460px;background:#fff;border:1.5px solid var(--line);border-radius:22px;
+    padding:30px 30px 26px;box-shadow:0 22px 55px -30px rgba(20,40,90,.42);text-align:center}
+  .wl-title{font-size:23px;font-weight:800;color:var(--ink)}
+  .wl-sub{margin-top:8px;font-size:15px;color:var(--muted);line-height:1.5}
+  .wl{margin-top:20px;display:flex;flex-direction:column;gap:12px}
+  .wl input{width:100%;font-size:16px;padding:15px 18px;border:1.5px solid #d6e0f2;border-radius:14px;
+    background:#fff;color:var(--ink);outline:none;font-family:inherit}
+  .wl input:focus{border-color:var(--brand);box-shadow:0 0 0 4px rgba(37,99,235,.12)}
+  .wl button{border:0;cursor:pointer;width:100%;justify-content:center;font-size:17px}
+  .wl-free{margin-top:12px;font-size:13px;color:var(--muted)}
+  .wl-err{margin-top:10px;font-size:14px;color:#c62828;min-height:1px}
+  .wl-ok{margin:34px auto 0;max-width:520px;background:#eaf6ee;border:1.5px solid #bfe3cb;border-radius:16px;
+    padding:22px 26px;color:#1f7a3f;font-size:18px;font-weight:700;line-height:1.5}
+  .wl-ok span{display:block;font-size:15px;font-weight:500;color:#3a6b4b;margin-top:6px}
+  .wl-ok .wl-spam{margin-top:12px;font-size:14px;font-weight:600;color:#8a6d1f;background:#fff7e6;border:1px solid #f2d98a;border-radius:10px;padding:10px 14px}
+  .hero-link{display:inline-block;margin-top:20px;color:var(--brand-2);font-weight:700;text-decoration:none;font-size:15px}
+
   /* how it works */
   section{padding:56px 0}
   .sec-head{text-align:center;max-width:44ch;margin:0 auto 40px}
@@ -138,11 +156,19 @@
     <div class="eyebrow">A smarter way to find a room &amp; a roommate</div>
     <h1>Find a room &mdash; and someone who's here for the <span class="hl">same reasons</span> as you.</h1>
     <p class="lede">Keymate helps students, interns and professionals moving to Ireland find a place to live and a roommate they actually click with &mdash; matched by how you really live, not just by price.</p>
-    <div class="cta">
-      <a class="btn btn-primary" href="mailto:info@mykeymate.com?subject=Keymate">&#9993;&#65039; info@mykeymate.com</a>
-      <a class="btn btn-ghost" href="#how">See how it works</a>
+    <div class="wl-card" id="wl-card">
+      <h2 class="wl-title">&#128233; Be the first to know</h2>
+      <p class="wl-sub">Sign up and be one of the first to know the moment Keymate goes live in Ireland.</p>
+      <form id="wl-form" class="wl" novalidate>
+        <input id="wl-name" type="text" name="name" placeholder="Your name (e.g. John Smith)" autocomplete="name" aria-label="Your name">
+        <input id="wl-email" type="email" name="email" required placeholder="Your email address" autocomplete="email" aria-label="Your email">
+        <button type="submit" class="btn btn-primary">Notify me &rarr;</button>
+      </form>
+      <p class="wl-err" id="wl-err" role="alert"></p>
+      <p class="wl-free">100% free &mdash; no spam, ever.</p>
     </div>
-    <p class="hero-note">Questions or want in early? Email us &mdash; we're launching city by city, Ireland first.</p>
+    <a class="hero-link" href="#how">See how it works &darr;</a>
+    <div class="wl-ok" id="wl-ok" hidden>&#127881; You're on the list!<span>Thanks for joining &mdash; we'll email you the moment Keymate goes live in Ireland.</span><span class="wl-spam">&#9888;&#65039; Heads up: right after you click, please also check your <b>Spam</b> and <b>Promotions</b> folders &mdash; the confirmation email sometimes lands there.</span></div>
   </div>
 
   <section id="how">
@@ -227,6 +253,31 @@
     } else { kmIntroDismiss(); }
     setTimeout(kmIntroDismiss, 12000); // safety: never trap the user
   }catch(x){ var e=document.getElementById('km-intro'); if(e&&e.parentNode) e.parentNode.removeChild(e); }
+})();
+</script>
+<script>
+(function(){
+  var ENDPOINT = ""; /* TODO: cole aqui o endpoint do serviço (ex.: https://formspree.io/f/xxxxxxx) */
+  var form=document.getElementById('wl-form'); if(!form) return;
+  var card=document.getElementById('wl-card');
+  var name=document.getElementById('wl-name'), email=document.getElementById('wl-email');
+  var err=document.getElementById('wl-err'), ok=document.getElementById('wl-ok');
+  function valid(v){ return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v); }
+  function confirmed(){
+    if(card) card.hidden=true;
+    var l=document.querySelector('.hero-link'); if(l) l.hidden=true;
+    ok.hidden=false; try{ ok.scrollIntoView({behavior:'smooth',block:'center'}); }catch(e){}
+  }
+  form.addEventListener('submit',function(e){
+    e.preventDefault(); if(err) err.textContent='';
+    var v=(email.value||'').trim(), nm=(name&&name.value||'').trim();
+    if(!valid(v)){ if(err) err.textContent='Please enter a valid email address.'; email.focus(); return; }
+    var btn=form.querySelector('button'); btn.disabled=true; btn.textContent='Signing up…';
+    if(!ENDPOINT){ confirmed(); return; }
+    fetch(ENDPOINT,{method:'POST',headers:{'Accept':'application/json','Content-Type':'application/json'},
+      body:JSON.stringify({name:nm,email:v,source:'mykeymate.com waitlist'})})
+      .then(function(){ confirmed(); }).catch(function(){ confirmed(); });
+  });
 })();
 </script>
 </body>
