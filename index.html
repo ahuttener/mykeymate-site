@@ -59,6 +59,20 @@
   .step h3{font-size:21px;font-weight:800}
   .step p{margin-top:9px;color:var(--muted);font-size:16px}
 
+  /* how it works — illustrated timeline */
+  .hiw{max-width:840px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+  .hiw-step{display:flex;gap:18px;align-items:stretch}
+  .hiw-rail{position:relative;width:52px;flex:none;display:flex;justify-content:center}
+  .hiw-rail:before{content:"";position:absolute;top:52px;bottom:-16px;width:4px;background:linear-gradient(#c6d8ff,#e3ecff);border-radius:4px}
+  .hiw-step:last-child .hiw-rail:before{display:none}
+  .hiw-num{width:52px;height:52px;border-radius:50%;background:linear-gradient(160deg,#2f6bff,var(--brand-2));color:#fff;font-size:22px;font-weight:800;display:grid;place-items:center;z-index:1;box-shadow:0 8px 18px -6px rgba(37,99,235,.55)}
+  .hiw-card{flex:1;display:flex;gap:18px;align-items:center;background:#fff;border:1.5px solid var(--line);border-radius:20px;padding:20px 24px;box-shadow:0 12px 30px -20px rgba(20,40,90,.4)}
+  .hiw-ic{width:58px;height:58px;flex:none;border-radius:15px;display:grid;place-items:center;font-size:28px;background:linear-gradient(150deg,#eaf1ff,#dbe8ff)}
+  .hiw-tt{font-size:21px;font-weight:800;color:var(--ink)}
+  .hiw-ds{font-size:16px;color:var(--muted);margin-top:3px;line-height:1.45}
+  .hiw-ds b{color:var(--ink)}
+  @media(max-width:600px){.hiw-ic{display:none}.hiw-card{padding:16px 18px}.hiw-tt{font-size:19px}}
+
   /* affinity band */
   .band{background:linear-gradient(150deg,#0b1020,#12224a 65%,#173a8f);color:#fff;border-radius:30px;
     padding:clamp(38px,5vw,60px);text-align:center;overflow:hidden;position:relative}
@@ -123,35 +137,44 @@
   <div class="hero shell">
     <div class="eyebrow">A smarter way to find a room &amp; a roommate</div>
     <h1>Find a room &mdash; and someone who's here for the <span class="hl">same reasons</span> as you.</h1>
-    <p class="lede">Keymate helps students, interns and young professionals moving to Ireland find a place to live and a roommate they actually click with &mdash; matched by how you really live, not just by price.</p>
+    <p class="lede">Keymate helps students, interns and professionals moving to Ireland find a place to live and a roommate they actually click with &mdash; matched by how you really live, not just by price.</p>
     <div class="cta">
-      <a class="btn btn-primary" href="mailto:info@mykeymate.com?subject=Keymate%20-%20early%20access">Get early access</a>
+      <a class="btn btn-primary" href="mailto:info@mykeymate.com?subject=Keymate">&#9993;&#65039; info@mykeymate.com</a>
       <a class="btn btn-ghost" href="#how">See how it works</a>
     </div>
-    <p class="hero-note">We're launching city by city. Ireland first.</p>
+    <p class="hero-note">Questions or want in early? Email us &mdash; we're launching city by city, Ireland first.</p>
   </div>
 
   <section id="how">
     <div class="shell">
       <div class="sec-head">
         <h2>How Keymate works</h2>
-        <p>Three simple steps &mdash; from sign-up to the right match.</p>
+        <p>From sign-up to the right match &mdash; in six steps.</p>
       </div>
-      <div class="steps">
-        <div class="step">
-          <div class="n">&#129504;</div>
-          <h3>1 &middot; Vibe check</h3>
-          <p>Answer six quick questions: your routine, tidiness, social energy, budget and what you're looking for.</p>
+      <div class="hiw">
+        <div class="hiw-step">
+          <div class="hiw-rail"><div class="hiw-num">1</div></div>
+          <div class="hiw-card"><div class="hiw-ic">&#129485;</div><div><div class="hiw-tt">Create your profile</div><div class="hiw-ds">A quick account: your situation (studying, interning, working) and what you're looking for.</div></div></div>
         </div>
-        <div class="step">
-          <div class="n">&#128269;</div>
-          <h3>2 &middot; Smart matching</h3>
-          <p>We cross your profile with rooms and people, and show you who you'd actually live with &mdash; not just the room.</p>
+        <div class="hiw-step">
+          <div class="hiw-rail"><div class="hiw-num">2</div></div>
+          <div class="hiw-card"><div class="hiw-ic">&#129504;</div><div><div class="hiw-tt">Vibe check</div><div class="hiw-ds">Six quick questions: your routine, tidiness, social energy, budget and what you're looking for.</div></div></div>
         </div>
-        <div class="step">
-          <div class="n">&#128274;</div>
-          <h3>3 &middot; Connect safely</h3>
-          <p>Chat inside Keymate. Your number and details stay private until you choose to share them.</p>
+        <div class="hiw-step">
+          <div class="hiw-rail"><div class="hiw-num">3</div></div>
+          <div class="hiw-card"><div class="hiw-ic">&#128269;</div><div><div class="hiw-tt">Smart matching</div><div class="hiw-ds">Keymate crosses your profile with rooms and people and scores compatibility across five dimensions.</div></div></div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-rail"><div class="hiw-num">4</div></div>
+          <div class="hiw-card"><div class="hiw-ic">&#128064;</div><div><div class="hiw-tt">See your matches</div><div class="hiw-ds">You see the room <b>and</b> who you'd live with &mdash; not just the price.</div></div></div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-rail"><div class="hiw-num">5</div></div>
+          <div class="hiw-card"><div class="hiw-ic">&#128274;</div><div><div class="hiw-tt">Message safely</div><div class="hiw-ds">Chat inside the app. Your phone number only shows when you choose to share it.</div></div></div>
+        </div>
+        <div class="hiw-step">
+          <div class="hiw-rail"><div class="hiw-num">6</div></div>
+          <div class="hiw-card"><div class="hiw-ic">&#129309;</div><div><div class="hiw-tt">Meet and move in</div><div class="hiw-ds">Book an in-person viewing, see the place and move in with someone who fits.</div></div></div>
         </div>
       </div>
     </div>
