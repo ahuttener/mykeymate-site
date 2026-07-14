@@ -275,5 +275,6 @@ var cl=document.querySelector('.citylist');if(cl){[].forEach.call(cl.querySelect
  if(t.indexOf('request a viewing')>-1){b.addEventListener('click',function(){location.href='messages.html';});}
  else if((b.className||'').indexOf('plus')>-1){b.addEventListener('click',function(){toast('Attachments coming soon');});}});
 var zoom=document.querySelector('.zoom');if(zoom&&zoom.parentElement){var sc=1,box=zoom.parentElement,bt=zoom.querySelectorAll('button');function ap(){box.style.transition='transform .15s';box.style.transformOrigin='center';box.style.transform='scale('+sc+')';}if(bt[0])bt[0].addEventListener('click',function(){sc=Math.min(2,sc+0.2);ap();});if(bt[1])bt[1].addEventListener('click',function(){sc=Math.max(0.6,sc-0.2);ap();});}
-}catch(e){}});})();</script></body>
+}catch(e){}});})();</script><script>(function(){try{var s=localStorage.getItem("km_photo");if(s)document.documentElement.style.setProperty("--avatar","url("+s+")");}catch(e){}})();</script>
+</body>
 </html>

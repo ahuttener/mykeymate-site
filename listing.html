@@ -24,6 +24,7 @@
 <meta name="twitter:title" content="Keymate — Bright double in Drumcondra, Dublin">
 <meta name="twitter:description" content="Find a room and match with roommates who fit your vibe. Built for the community in Ireland.">
 <meta name="twitter:image" content="https://www.mykeymate.com/og-image.png">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 </head>
 <body>
 <style>
@@ -115,13 +116,9 @@
   .bills .r span:last-child{font-variant-numeric:tabular-nums}
 
   /* map */
-  .map{position:relative;height:230px;border-radius:14px;overflow:hidden;margin-top:14px;border:1px solid var(--line);
-    background:
-      repeating-linear-gradient(0deg,transparent 0 26px,rgba(120,140,170,.14) 26px 27px),
-      repeating-linear-gradient(90deg,transparent 0 26px,rgba(120,140,170,.14) 26px 27px),
-      radial-gradient(120px 90px at 74% 30%,rgba(46,160,110,.22),transparent 70%),
-      radial-gradient(160px 120px at 20% 78%,rgba(46,120,200,.16),transparent 70%),
-      var(--card-2)}
+  .map{position:relative;height:250px;border-radius:14px;overflow:hidden;margin-top:14px;border:1px solid var(--line);background:var(--card-2);z-index:0}
+  .map .leaflet-container{height:100%;width:100%;background:var(--card-2);font-family:inherit}
+  .pinbadge{background:var(--brand);color:#fff;font-weight:800;font-size:12.5px;padding:6px 11px;border-radius:999px;box-shadow:0 8px 18px -6px rgba(37,99,235,.6);white-space:nowrap;transform:translate(-50%,-100%);display:inline-block}
   .map .road{position:absolute;background:rgba(150,168,196,.5)}
   .mpin{position:absolute;left:50%;top:46%;transform:translate(-50%,-100%);z-index:2;display:flex;flex-direction:column;align-items:center}
   .mpin .b{background:var(--brand);color:#fff;font-weight:800;font-size:12.5px;padding:6px 11px;border-radius:999px;box-shadow:0 8px 18px -6px rgba(37,99,235,.6)}
@@ -312,12 +309,7 @@ function kmCloseDev(){var e=document.getElementById('km-dev');if(e)e.style.displ
         <!-- location -->
         <div class="block">
           <div class="blocktitle">Where you'll live</div>
-          <div class="map">
-            <div class="road" style="left:0;right:0;top:52%;height:6px"></div>
-            <div class="road" style="top:0;bottom:0;left:46%;width:6px"></div>
-            <div class="road" style="left:0;right:0;top:24%;height:3px"></div>
-            <div class="mpin"><span class="b">€680</span><span class="tail"></span></div>
-          </div>
+          <div class="map" id="livemap"></div>
           <p class="mnote">Approx. location shown until you message the host. <b>Drumcondra</b> · 🚶 12 min to DCU · 🚌 12 min to O'Connell St · Royal Canal 10 min walk · Tesco &amp; cafés nearby.</p>
         </div>
 
@@ -325,7 +317,7 @@ function kmCloseDev(){var e=document.getElementById('km-dev');if(e)e.style.displ
         <div class="block">
           <div class="blocktitle">Meet your flatmates</div>
           <div style="margin-top:8px">
-            <div class="mate"><div class="av" style="background:linear-gradient(135deg,#2563EB,#1D4FD0)">SO</div><div><div class="nm">Sean O'Brien <svg class="verified" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 1.8 3 .2.9 2.9 2.4 1.8-.9 2.9.9 2.9-2.4 1.8-.9 2.9-3 .2L12 22l-2.4-1.8-3-.2-.9-2.9L3.3 15l.9-2.9-.9-2.9 2.4-1.8.9-2.9 3-.2z"/><path d="M9.5 12.5l1.8 1.8 3.5-3.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div class="mt">31 · Product designer · lives here · host</div></div></div>
+            <div class="mate"><div class="av" style="background:linear-gradient(135deg,#2563EB,#1D4FD0)">SO</div><div><div class="nm">Sean O'Brien</div><div class="mt">31 · Product designer · lives here · host</div></div></div>
             <div class="mate"><div class="av" style="background:linear-gradient(135deg,#0f9d76,#0b6e53)">CM</div><div><div class="nm">Ciara Murphy</div><div class="mt">29 · Nurse · lives here</div></div></div>
           </div>
         </div>
@@ -340,7 +332,7 @@ function kmCloseDev(){var e=document.getElementById('km-dev');if(e)e.style.displ
           <button class="btn btn-ghost">Request a viewing</button>
           <div class="hostrow">
             <div class="av" style="width:40px;height:40px;background:linear-gradient(135deg,#2563EB,#1D4FD0)">SO</div>
-            <div><div class="nm" style="font-weight:700;font-size:14px;display:flex;gap:5px;align-items:center">Sean O'Brien <svg class="verified" width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 1.8 3 .2.9 2.9 2.4 1.8-.9 2.9.9 2.9-2.4 1.8-.9 2.9-3 .2L12 22l-2.4-1.8-3-.2-.9-2.9L3.3 15l.9-2.9-.9-2.9 2.4-1.8.9-2.9 3-.2z"/><path d="M9.5 12.5l1.8 1.8 3.5-3.8" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><div style="font-size:12.5px;color:var(--muted)">Replies in ~2h</div></div>
+            <div><div class="nm" style="font-weight:700;font-size:14px;display:flex;gap:5px;align-items:center">Sean O'Brien</div><div style="font-size:12.5px;color:var(--muted)">Replies in ~2h</div></div>
           </div>
           <div class="safe"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg> Keymate doesn't verify hosts or listings. <b>Never</b> pay a deposit or rent before you've seen the room in person and met the host. Report anything suspicious — Keymate isn't responsible for deals made between members.</div>
         </div>
@@ -404,5 +396,23 @@ var cl=document.querySelector('.citylist');if(cl){[].forEach.call(cl.querySelect
  if(t.indexOf('request a viewing')>-1){b.addEventListener('click',function(){location.href='messages.html';});}
  else if((b.className||'').indexOf('plus')>-1){b.addEventListener('click',function(){toast('Attachments coming soon');});}});
 var zoom=document.querySelector('.zoom');if(zoom&&zoom.parentElement){var sc=1,box=zoom.parentElement,bt=zoom.querySelectorAll('button');function ap(){box.style.transition='transform .15s';box.style.transformOrigin='center';box.style.transform='scale('+sc+')';}if(bt[0])bt[0].addEventListener('click',function(){sc=Math.min(2,sc+0.2);ap();});if(bt[1])bt[1].addEventListener('click',function(){sc=Math.max(0.6,sc-0.2);ap();});}
-}catch(e){}});})();</script></body>
+}catch(e){}});})();</script><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+(function(){
+  function initMap(){
+    var el=document.getElementById('livemap');
+    if(!el||!window.L)return;
+    var lat=53.3706,lng=-6.2591;
+    var dark=(window.matchMedia&&matchMedia('(prefers-color-scheme:dark)').matches)||document.documentElement.getAttribute('data-theme')==='dark';
+    var map=L.map(el,{scrollWheelZoom:false,zoomControl:true}).setView([lat,lng],14);
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/'+(dark?'dark_all':'light_all')+'/{z}/{x}/{y}{r}.png',{subdomains:'abcd',maxZoom:19,attribution:'&copy; OpenStreetMap &copy; CARTO'}).addTo(map);
+    L.circle([lat,lng],{radius:320,color:'#2563eb',weight:1,fillColor:'#2563eb',fillOpacity:.12}).addTo(map);
+    var icon=L.divIcon({className:'',html:'<span class="pinbadge">\u20ac680</span>',iconSize:[0,0],iconAnchor:[0,0]});
+    L.marker([lat,lng],{icon:icon}).addTo(map);
+    setTimeout(function(){map.invalidateSize();},250);
+  }
+  if(document.readyState!=='loading')initMap();else document.addEventListener('DOMContentLoaded',initMap);
+})();
+</script>
+</body>
 </html>
